@@ -15,7 +15,7 @@ const BookList = () => {
   const [filterPrice, setFilterPrice] = useState('');
 
   useEffect(() => {
-    fetch('/books.json')
+    fetch(${process.env.PUBLIC_URL}/books.json`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
