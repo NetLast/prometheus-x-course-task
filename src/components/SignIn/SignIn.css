@@ -1,0 +1,90 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.bookstore {
+  margin: 20px;
+  padding: 20px;
+  text-indent: 10px;
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+
+.avatar {
+  margin-bottom: 20px;
+}
+
+#avatar {
+  width: 160px;
+  height: 160px;
+  transition: width 0.3s, height 0.3s;
+}
+
+.login-form {
+  max-width: 400px;
+  text-align: center;
+  justify-content: center;
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.login-form h2 {
+  margin-top: 0;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  width: 200px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+input[type="text"]::placeholder {
+  text-align: center;
+}
+
+button {
+  width: 100%;
+  background-color: #007bff;
+  color: #fff;
+  border: 1px;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  position: absolute;
+  left: 0;
+  width: auto;
+  color: red;
+  text-align: center;
+  font-size: smaller;
+}
+
+/* Media query для ширини екрану 320px */
+@media (max-width: 320px) {
+  input[type="text"], button {
+    width: calc(100% - 16px);
+    margin: 0 8px;
+  }
+
+  #avatar {
+    width: 200px;
+    height: 200px;
+  }
+}
