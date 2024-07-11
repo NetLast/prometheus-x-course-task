@@ -9,7 +9,6 @@ const BookDetail = () => {
   const { books } = useContext(BookContext);
   const [quantity, setQuantity] = useState(1);
   const [cartQuantity, setCartQuantity] = useState(0);
-  const [ setCartStatus] = useState('');
 
   useEffect(() => {
     const foundBook = books.find(b => b.id === parseInt(id, 10));
