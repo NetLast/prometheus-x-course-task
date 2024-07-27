@@ -13,22 +13,14 @@ const BookDetail = () => {
   useEffect(() => {
     const foundBook = books.find(b => b.id === parseInt(id, 10));
     if (foundBook) {
-      const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+      const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
       const cartItem = cartItems.find(item => item.id === foundBook.id);
       setCartQuantity(cartItem ? cartItem.quantity : 0);
     }
   }, [books, id]);
 
   const handleQuantityChange = (e) => {
-    let value = parseInt(e.target.value, 10);
-    if (isNaN(value)) {
-      value = 1;
-    }
-    if (value < 1) {
-      value = 1;
-    } else if (value > 42) {
-      value = 42;
-    }
+    let value = Math.max(1, Math.min(42, parseInt(e.target.value, 10) || 1));
     setQuantity(value);
   };
 
@@ -38,21 +30,26 @@ const BookDetail = () => {
       return;
     }
 
-    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const existingItemIndex = cartItems.findIndex(item => item.id === foundBook.id);
-    if (existingItemIndex !== -1) {
-      cartItems[existingItemIndex].quantity += quantity;
-    } else {
-      cartItems.push({ ...foundBook, quantity });
+    try {
+      let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+      const existingItemIndex = cartItems.findIndex(item => item.id === foundBook.id);
+      if (existingItemIndex !== -1) {
+        cartItems[existingItemIndex].quantity += quantity;
+      } else {
+        cartItems.push({ ...foundBook, quantity });
+      }
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      setCartQuantity(prevQuantity => prevQuantity + quantity);
+      alert('Книга додана до кошика');
+    } catch (error) {
+      console.error('Failed to update cart:', error);
     }
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    setCartQuantity(prevQuantity => prevQuantity + quantity);
-    alert('Книга додана до кошика');
   };
 
   const book = books.find(b => b.id === parseInt(id, 10));
+
   if (!book) {
-    return <div>Loading...</div>;
+    return <div>Книга не знайдена</div>;
   }
 
   return (
@@ -65,7 +62,7 @@ const BookDetail = () => {
         <div className="book-inform">
           <h1>{book.title}</h1>
           <p className="book-author">Автор: {book.author}</p>
-          <p className="book-level"> Рівень: {book.level}</p>
+          <p className="book-level">Рівень: {book.level}</p>
           <div className="book-tags">
             <p>Теги: {book.tags.join(', ')}</p>
           </div>
@@ -79,6 +76,8 @@ const BookDetail = () => {
                   type="number"
                   value={quantity}
                   onChange={handleQuantityChange}
+                  min="1"
+                  max="42"
                 />
               </div>
             </div>

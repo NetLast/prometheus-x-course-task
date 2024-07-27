@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import './BookList.css';
-import defaultImage from '../../images/default-book-image.jpg';
 import { FaSearch } from 'react-icons/fa';
+import { TbDeviceImacSearch } from 'react-icons/tb';
+import './BookList.css';
 import { BookContext } from '../../contexts/BookContext';
-import {TbDeviceImacSearch} from "react-icons/tb";
+import BookItem from './BookItem';
 
 const BookList = () => {
   const { books, setBooks } = useContext(BookContext);
@@ -12,33 +11,30 @@ const BookList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filterTitle, setFilterTitle] = useState('');
-  const [filterPrice, setFilterPrice] = useState('');
+  const [filterPrice, setFilterPrice] = useState('all');
 
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/books.json`)
-      .then(response => {
+    const fetchBooks = async () => {
+      try {
+        const response = await fetch(`${process.env.PUBLIC_URL}/books.json`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        return response.json();
-      })
-      .then(data => {
+        const data = await response.json();
         if (data.books) {
           setBooks(data.books);
         } else {
           throw new Error('Data format is incorrect');
         }
-        setIsLoading(false);
-      })
-      .catch(error => {
+      } catch (error) {
         setError(error.message);
+      } finally {
         setIsLoading(false);
-      });
-  }, [setBooks]);
+      }
+    };
 
-  if (!books) {
-    return <div>Loading...</div>;
-  }
+    fetchBooks();
+  }, [setBooks]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -49,50 +45,53 @@ const BookList = () => {
   }
 
   const filteredBooks = books.filter(book => {
-    return (
-      book.title.toLowerCase().includes(filterTitle.toLowerCase()) &&
-      (filterPrice === '' || book.price <= parseFloat(filterPrice))
-    );
+    const matchesTitle = book.title.toLowerCase().includes(filterTitle.toLowerCase());
+    const matchesPrice = (() => {
+      if (filterPrice === 'all') return true;
+      if (filterPrice === '0-15') return book.price > 0 && book.price < 15;
+      if (filterPrice === '15-30') return book.price >= 15 && book.price < 30;
+      if (filterPrice === '30+') return book.price >= 30;
+      return false;
+    })();
+
+    return matchesTitle && matchesPrice;
   });
 
   return (
     <section className="container-books">
       <div id="filters">
         <div className="filter-group-name">
-          <input id="filters-input"
-                 type="text"
-                 placeholder="Фільтр за назвою"
-                 value={filterTitle}
-                 onChange={(e) => setFilterTitle(e.target.value)}
+          <input
+            id="filters-input"
+            type="text"
+            placeholder="Фільтр за назвою"
+            value={filterTitle}
+            onChange={(e) => setFilterTitle(e.target.value)}
           />
-          <div id="fa"><FaSearch></FaSearch></div>
+          <div id="fa"><FaSearch /></div>
         </div>
         <div className="filter-group-price">
-          <input id="filters-input"
-                 type="number"
-                 placeholder="Фільтр за ціною"
-                 value={filterPrice}
-                 onChange={(e) => setFilterPrice(e.target.value)}
-          />
-          <div id="fa"><TbDeviceImacSearch></TbDeviceImacSearch></div>
+          <select
+            id="filters-input"
+            value={filterPrice}
+            onChange={(e) => setFilterPrice(e.target.value)}
+          >
+            <option value="all">Всі</option>
+            <option value="0-15">0 &lt; ціна &lt; 15</option>
+            <option value="15-30">15 &lt; ціна &lt; 30</option>
+            <option value="30+">ціна &gt; 30</option>
+          </select>
+          <div id="fa"><TbDeviceImacSearch /></div>
         </div>
       </div>
       <div className="book-list">
-        {filteredBooks.map(book => (
-          <div key={book.id} className="book-item">
-            <img src={book.image || defaultImage} alt={book.title} className="book-image" />
-            <div className="book-details">
-              <h3>{book.title}</h3>
-              <p>Автор: {book.author}</p>
-            </div>
-            <div className="price-and-button">
-              <p id="book-price-list">{book.price} грн</p>
-              <Link to={`/books/${book.id}`}>
-                <button className="button-show">Переглянути</button>
-              </Link>
-            </div>
-          </div>
-        ))}
+        {filteredBooks.length > 0 ? (
+          filteredBooks.map(book => (
+            <BookItem key={book.id} book={book} />
+          ))
+        ) : (
+          <p>No books found</p>
+        )}
       </div>
     </section>
   );

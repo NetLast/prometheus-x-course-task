@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, userEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import BookDetail from './BookDetail';
 
@@ -45,10 +45,10 @@ describe('BookDetail component', () => {
     const { getByText, getByRole } = render(<BookDetail />);
 
     // Set initial quantity to 3
-    fireEvent.change(getByRole('spinbutton'), { target: { value: '3' } });
+    userEvent.change(getByRole('spinbutton'), { target: { value: '3' } });
 
     // Simulate decrementing quantity
-    fireEvent.change(getByRole('spinbutton'), { target: { value: '2' } });
+    userEvent.change(getByRole('spinbutton'), { target: { value: '2' } });
 
     // Check if quantity updated correctly
     expect(getByRole('spinbutton').value).toBe('2');
@@ -58,13 +58,13 @@ describe('BookDetail component', () => {
     const { getByText, getByRole } = render(<BookDetail />);
 
     // Set initial quantity to 4
-    fireEvent.change(getByRole('spinbutton'), { target: { value: '4' } });
+    userEvent.change(getByRole('spinbutton'), { target: { value: '4' } });
 
     // Check initial total cost
     expect(getByText('Загальна вартість: 400 грн')).toBeInTheDocument();
 
     // Simulate changing quantity to 3
-    fireEvent.change(getByRole('spinbutton'), { target: { value: '3' } });
+    userEvent.change(getByRole('spinbutton'), { target: { value: '3' } });
 
     // Check updated total cost
     expect(getByText('Загальна вартість: 300 грн')).toBeInTheDocument();

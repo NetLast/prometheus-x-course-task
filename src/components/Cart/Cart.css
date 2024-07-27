@@ -2,6 +2,7 @@
   padding: 50px;
   margin-top: 120px;
 }
+
 .cart-empty {
   display: flex;
   flex-direction: column;
@@ -41,10 +42,11 @@
 
 .buy, .total-price {
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
 }
+
 #buy {
-  width: 200px;
+  width: 180px;
   padding: 10px;
   margin: 10px;
   background-color: #007bff;
@@ -56,4 +58,70 @@
 
 #buy:hover {
   background-color: #0056b3;
+}
+
+.remove-from-cart {
+  background-color: rgba(9,9,121,1);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.remove-from-cart:hover {
+  background-color: rgb(2,0,36);
+}
+
+#cart-quantity {
+  width: 10%;
+}
+
+#inform-cart {
+  width: 10%;
+}
+.quantity-control-cart {
+  display: flex;
+}
+
+.cost-price{
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 5px;
+  width: 32px;
+}
+
+.quantity-control button:hover {
+  background-color: #0056b3;
+}
+
+.quantity-control input {
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 0 5px;
+  padding: 5px;
+}
+
+.total-price-input {
+  width: 30px;
+  height: 26px;
+}
+
+.total-price-error {
+  display: flex;
+  justify-content: space-between; /* Розмістити елементи з простором між ними */
+  align-items: center;
+}
+
+#error-message, .total-price {
+  flex: 1; /* Кожен елемент займатиме рівну частину доступного простору */
+  margin: 10px;
+}
+
+#error-message {
+  color: red;
 }

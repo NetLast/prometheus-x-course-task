@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { HashRouter as Router,  Route, Routes, Navigate } from 'react-router-dom';
 import { BookContextProvider } from './contexts/BookContext';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -17,7 +17,7 @@ const PrivateRoute = ({ children }) => {
 
 function App() {
   return (
-    <Router basename="/prometheus-x-course-task">
+    <Router>
       <div className="App">
         <BookContextProvider>
           <Header />
